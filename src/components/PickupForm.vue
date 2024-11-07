@@ -53,7 +53,36 @@ const submitForm = async () => {
     resetForm();
   } catch (error) {
     console.error('Error creating pickup point:', error);
-    errorMessage.value = String(error.response?.data) || 'An unexpected error occurred.';
+    
+    // Check if the error response contains validation errors
+    if (error.response?.data) {
+      const validationErrors = error.response.data;
+      const formattedErrors = [];
+
+      // Iterate through the keys of the validation errors
+      for (const [key, value] of Object.entries(validationErrors)) {
+        if (Array.isArray(value)) {
+          // If the value is an array of objects, check for non_field_errors in each object
+          value.forEach((item) => {
+            if (typeof item === 'object' && item !== null) {
+              if (item.non_field_errors) {
+                formattedErrors.push(`${key} - non_field_errors: ${item.non_field_errors.join(', ')}`);
+              }
+            } else {
+              // If it's just an array of strings, join the messages
+              formattedErrors.push(`${key}: ${value.join(', ')}`);
+            }
+          });
+        } else {
+          // Handle case where value is not an array (if applicable)
+          formattedErrors.push(`${key}: ${value}`);
+        }
+      }
+      
+      errorMessage.value = formattedErrors.join('. ') || 'An unexpected error occurred.';
+    } else {
+      errorMessage.value = 'An unexpected error occurred.';
+    }
   }
 };
 
@@ -80,7 +109,8 @@ const resetForm = () => {
 
 <template>
   <form @submit.prevent="submitForm" class="space-y-6 bg-white p-6 rounded-lg shadow-lg border border-gray-100">
-    <div v-if="errorMessage" class="bg-red-600 mb-4">
+    <div v-if="errorMessage" class="bg-red-600 mb-4 pl-3 pt-2 pb-2">
+      Hemos detectado los siguientes problemas: <br>
       {{ errorMessage }}
     </div>
 

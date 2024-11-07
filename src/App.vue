@@ -24,9 +24,10 @@ import { RouterView, RouterLink } from 'vue-router';
 
     <footer class="bg-gray-800 text-white py-4">
       <div class="container mx-auto text-center">
-        Developed with &hearts; and some AI by @IvanInVR | 
+        Hecho con &hearts; y algo de IA por <a href="http://x.com/IvanInVR">@IvanInVR</a> | 
         <RouterLink to="/legal" class="text-white underline">Aviso Legal</RouterLink> |
-        <RouterLink to="/contact" class="text-white underline">Contacto</RouterLink>
+        <RouterLink to="/contact" class="text-white underline">Contacto</RouterLink> |
+        Icono por <a href="http://iconos8.es">Icons8</a> 
       </div>
     </footer>
   </div>
