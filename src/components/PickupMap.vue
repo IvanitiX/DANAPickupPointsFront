@@ -3,6 +3,20 @@ import { onMounted, onUnmounted, ref, watch } from 'vue';
 import type { PickupPoint } from '../types/pickup';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+// Import marker icon images
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+
+// Set the default marker icons
+const customIcon = L.icon({
+  iconUrl: markerIcon,
+  iconRetinaUrl: markerIcon2x,
+  shadowUrl: markerShadow,
+  iconSize: [25, 41], // Size of the icon
+  iconAnchor: [12, 41], // Point of the icon which will correspond to marker's location
+  popupAnchor: [1, -34], // Point from which the popup should open relative to the iconAnchor
+});
 
 const props = withDefaults(defineProps<{
   pickupPoints: PickupPoint[];
@@ -72,7 +86,7 @@ function addMarkers() {
 
 props.pickupPoints.forEach(point => {
   if (point.latitude && point.longitude) {
-    const marker = L.marker([point.latitude, point.longitude])
+    const marker = L.marker([point.latitude, point.longitude], { icon: customIcon })
       .bindPopup(`
         <div class="min-w-[200px]">
           <h3 class="font-bold text-lg mb-1">${point.name}</h3>

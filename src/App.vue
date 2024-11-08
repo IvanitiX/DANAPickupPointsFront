@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { RouterView, RouterLink } from 'vue-router';
+import 'leaflet/dist/leaflet.css';
 </script>
 
 <template>
