@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { AxiosError } from 'axios';
 import type { PickupPoint } from '../types/pickup';
 import { api } from '../services/api';
 import TownSearch from './TownSearch.vue';
@@ -53,10 +54,13 @@ const submitForm = async () => {
     resetForm();
   } catch (error) {
     console.error('Error creating pickup point:', error);
-    
+
+    // Type assertion to AxiosError
+    const axiosError = error as AxiosError;
+
     // Check if the error response contains validation errors
-    if (error.response?.data) {
-      const validationErrors = error.response.data;
+    if (axiosError.response?.data) {
+      const validationErrors = axiosError.response.data;
       const formattedErrors = [];
 
       // Iterate through the keys of the validation errors

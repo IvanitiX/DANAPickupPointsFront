@@ -4,9 +4,9 @@ import { api } from '../services/api';
 import type { Town } from '../types/pickup';
 import { useDebounceFn } from '@vueuse/core';
 
-const props = defineProps<{
+/*const props = defineProps<{
   modelValue: number;
-}>();
+}>();*/
 
 const emit = defineEmits(['update:modelValue']);
 

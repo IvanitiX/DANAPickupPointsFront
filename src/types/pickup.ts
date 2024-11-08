@@ -22,7 +22,7 @@ export interface TownData {
 }
 
 export interface PickupPoint {
-  id: number;
+  id?: number;
   name: string;
   observations: string;
   street: string;
@@ -36,6 +36,6 @@ export interface PickupPoint {
 }
 
 export interface Report {
-  id: number;
+  id?: number;
   description: string;
 }

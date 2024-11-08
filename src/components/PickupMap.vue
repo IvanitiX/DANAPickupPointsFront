@@ -64,36 +64,42 @@ function addMarkers() {
     }
   });
 
-  const bounds = L.latLngBounds(); // Create a bounds object
+  const bounds = props.pickupPoints.length > 0 && props.pickupPoints[0].latitude && props.pickupPoints[0].longitude
+    ? L.latLngBounds([[props.pickupPoints[0].latitude, props.pickupPoints[0].longitude]])
+    : L.latLngBounds([]); // Create an empty bounds object if no points
 
-  props.pickupPoints.forEach(point => {
-    if (point.latitude && point.longitude) {
-      const marker = L.marker([point.latitude, point.longitude])
-        .bindPopup(`
-          <div class="min-w-[200px]">
-            <h3 class="font-bold text-lg mb-1">${point.name}</h3>
-            <p class="mb-2">
-              ${point.street} ${point.number}<br>
-              ${point.town_data?.name}<br>
-              GPS: (${point.latitude},${point.longitude})
-            </p>
-            <div class="text-sm">
-              <strong>Horarios:</strong><br>
-              ${formatTimetables(point.timetables)}
-            </div>
-            <a href="/pickup/${point.id}" class="text-red-600">
-              Más info
-            </a>
+  const markers: L.Marker[] = []; // Create an array to hold markers
+
+props.pickupPoints.forEach(point => {
+  if (point.latitude && point.longitude) {
+    const marker = L.marker([point.latitude, point.longitude])
+      .bindPopup(`
+        <div class="min-w-[200px]">
+          <h3 class="font-bold text-lg mb-1">${point.name}</h3>
+          <p class="mb-2">
+            ${point.street} ${point.number}<br>
+            ${point.town_data?.name}<br>
+            GPS: (${point.latitude},${point.longitude})
+          </p>
+          <div class="text-sm">
+            <strong>Horarios:</strong><br>
+            ${formatTimetables(point.timetables)}
           </div>
-        `, {
-          maxWidth: 300
-        })
-        .addTo(map!);
+          <a href="/pickup/${point.id}" class="text-red-600">
+            Más info
+          </a>
+        </div>
+      `, {
+        maxWidth: 300
+      })
+      .addTo(map!);
 
-      // Extend bounds to include this marker's position
-      bounds.extend([point.latitude, point.longitude]);
-    }
-  });
+    markers.push(marker); // Store the marker in the array
+
+    // Extend bounds to include this marker's position
+    bounds.extend([point.latitude, point.longitude]);
+  }
+});
 
   // If there are multiple points, fit the map to the bounds
   if (props.pickupPoints.length > 1) {
